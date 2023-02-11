@@ -1,0 +1,44 @@
+.search{
+    margin-left: 15%;
+}
+.profile{
+    border-radius: 50%;
+    margin-left: 10%;
+}
+.inputSearch{
+    width: 350px !important;
+    margin-right: 10px;
+    border-radius: 5px;
+    border-color:grey;
+}
+.modals{
+    margin-left: 13%;
+}
+.addPhoto{
+    background-color: rgb(201, 197, 197);
+    height: 200px;
+    margin-left: 21%;
+}
+.logout{
+    border-color: white;
+}
+@media screen and (max-width: 1160px) {
+
+    .profile{
+        border-radius: 50%;
+        margin-left: 5%;
+        padding-top: 10px;
+    }
+    .inputSearch{
+        width: 200px !important;
+    }
+    .modals{
+        margin-left: 0%;
+    }
+    
+}
+@media screen and (max-width: 990px) {
+    .scards{
+        margin-right: 1000px !important;
+    }
+}

@@ -1,0 +1,57 @@
+.contents {
+    margin-top: 100px !important;
+    /* margin-left: 42%; */
+    /* margin-right: 100%; */
+  }
+.contentButton{
+  margin-top: 30px;
+ 
+}
+.btnAuth1{
+  height: 45px;
+   border-color: rgb(180, 177, 177);
+   border-radius: 5px 0px 0px 5px;
+   color: rgb(180, 177, 177);
+}
+.btnAuth2{
+  height: 45px;
+   border-color: rgb(180, 177, 177);
+   border-radius: 0px 5px 5px 0px;
+   color: rgb(180, 177, 177);
+}
+.btnAuth1Active{
+  height: 45px;
+  background-color: #0d6efd; ;
+  border-color: rgb(180, 177, 177);
+  border-radius: 5px 0px 0px 5px;
+  color: aliceblue;
+}
+.btnAuth2Active{
+  height: 45px;
+  background-color: #0d6efd; 
+  border-color: rgb(180, 177, 177);
+  border-radius: 0px 5px 5px 0px;
+  color: aliceblue;
+}
+
+.buttonAuth:hover{
+  background-color: #0d6efd;
+  transform: scale(1);
+  color: white;
+}
+.buttonAuth{
+  height: 40px;
+  margin-top: 30px;
+  border-color: rgb(180, 177, 177);
+  border-radius: 5px 0px 0px 5px;
+  border-radius: 20px;
+}
+
+.inputLogin{
+  margin-top: 30px;
+  width: 50% !important;
+  height: 45px;
+}
+  @media screen and (max-width: 480px) {
+ 
+  }
