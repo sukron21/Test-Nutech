@@ -15,6 +15,8 @@ const Index = () => {
   const [product, setProduct] = useState([]);
   const [imageProduct, setImageProduct] = useState();
   const [dataSearch, setDataSearch] =useState()
+//   const [ID, setID] = useState ()
+//   const [modal, setModal] = useState()
 
   let total = "";
   const handleClick = (event) => {
@@ -30,7 +32,7 @@ const Index = () => {
       .get(`${process.env.REACT_APP_BACKEND_URL}/productlist/limit/${search}`)
       .then((response) => {
         console.log(response.data)
-        // setDataSearch(response.data)
+        setDataSearch(response.data.data.rows)
         // console.log(response.data[0]);
         // setTitle(response.data[0].nama_recipe)
         // setingredients(response.data[0].ingredients.split(','))
@@ -41,6 +43,7 @@ const Index = () => {
       });
       
   },[]);
+ 
   
   const deleteProduct = (id_product, e) => {
     e.preventDefault();
@@ -82,16 +85,25 @@ const Index = () => {
             }).catch((err) => {
                 alert(err)            })   
           }
+    // const toggleModal = () => {
+    //     setModal((prevstate)=> ! prevstate)
+    // }
+    // const Detail = (id) =>{
+    //     toggleModal();
+    //     setID (()=>id)     
+    // }
+
   
   return (
     <>
-    {JSON.stringify(dataSearch)}
+    {/* {JSON.stringify(dataSearch)} */}
       <div className="container-fluid">
         <Nav />
         <div className="container">
           <div className={Style.bg}>
             <h4>List Product</h4>
             <div className="row d-flex justify-content-center">
+
               {dataSearch.map((item, index)=>(
                 <div key={index} className="col-md-3  ">
                 <div className={` ${Style.cards} `}>
@@ -115,6 +127,7 @@ const Index = () => {
                           className="btn btn-primary ms-2"
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal4"
+                        onClick={(e) => onSubmit(item.id_product, e)}
                         >
                           Update
                         </button>
@@ -124,6 +137,7 @@ const Index = () => {
                           tabIndex="-1"
                           aria-labelledby="exampleModalLabel"
                           aria-hidden="true"
+                        //   toggle={toggleModal}
                         >
                           <div className="modal-dialog">
                             <div className="modal-content">
@@ -153,7 +167,7 @@ const Index = () => {
                                       </div>
                                       <div className="d-flex justify-content-center">
                                       <h5
-                                        // className="text-muted"
+                                        
                                         id="customBtn"
                                         onClick={handleClick}
                                       >
@@ -165,7 +179,7 @@ const Index = () => {
                                         ref={hiddenFileInput}
                                         id="formFile"
                                         onChange={handleChange}
-                                        // style={{ display: "none" }}
+                                       
                                       />
                                       </div>
                                     </div>

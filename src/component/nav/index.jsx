@@ -44,9 +44,19 @@ const Index = () => {
         body.append("priceb", product.priceb);
         axios.post((`${process.env.REACT_APP_BACKEND_URL}/insert`), body)
             .then((response) => {
-                    alert("data berhasil ditambahkan")
-                    console.log(response.data)
-                    return navigate('/home')
+              if(response.data.status=="failed"){
+                alert("nama sudah terdaftar")
+              }else if(response.data.message=="upload product photo failed bor"){
+              alert("ukuran file melebihi 100kb atau type file tidak didukung mohon masukkan type gambar .jpg atau .png ")
+                
+              }else{
+                alert("data berhasil ditambahkan")
+                console.log(response.data)
+                return navigate('/home')
+              }
+                    // alert("data berhasil ditambahkan")
+                    // console.log(response.data)
+                    // return navigate('/home')
                 // console.log(response.data)
                 // return navigate('/')
             }).catch((err) => {

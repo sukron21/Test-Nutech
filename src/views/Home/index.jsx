@@ -13,6 +13,7 @@ const Index = () => {
   const [product, setProduct] = useState([]);
   const [imageProduct, setImageProduct] = useState();
   const [page, setPage] = useState(1);
+  const [dataID,setDataID]= useState([])
   let total = "";
   const handleClick = (event) => {
     hiddenFileInput.current.click();
@@ -27,7 +28,8 @@ const Index = () => {
     getData( page)
     const datauser = JSON.parse(localStorage.getItem("name"));
     const id_user = datauser.data.id_seller;
-    console.log("id",id_user)
+    // console.log("id",id_user)
+    getDetailid(dataID)
   }, [ page])
  const getData=() => {
     axios
@@ -54,7 +56,6 @@ const Index = () => {
   };
   
   const deleteProduct = (id_product, e) => {
-    e.preventDefault();
     // console.log(id_product)
     axios.delete(`${process.env.REACT_APP_BACKEND_URL}/product/delete/${id_product}`)
         .then((response) => {
@@ -93,10 +94,25 @@ const Index = () => {
             }).catch((err) => {
                 alert(err)            })   
           }
+          const getDetailid = (id_product) =>{
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/productlist/${id_product}`)
+            .then((response) => {
+              alert(response.data.rows)
+              setDataID(response.data)
+              // console.log(response.data[0]);
+              // setTitle(response.data[0].nama_recipe)
+              // setingredients(response.data[0].ingredients.split(','))
+              // SetImage(response.data[0].image)
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+            
+        }
   
   return (
     <>
-    {/* {JSON.stringify(data)} */}
+    {JSON.stringify(dataID)}
       <div className="container-fluid">
         <Nav />
         <div className="container">

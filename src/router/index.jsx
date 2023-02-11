@@ -22,8 +22,7 @@ const Index = () =>{
                 <Route path="home" element={<PrivateRoute/>} >
 						    <Route index element={<Home />} />
                         </Route>
-                {/* <Route path="home" element={<Home />} /> */}
-                <Route path="/AllDetail" element={<PrivateRoute />}>
+                <Route path="/Profile" element={<PrivateRoute />}>
           <Route index element={<Profile />} />
           </Route>
             </Route>
