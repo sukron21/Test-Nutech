@@ -3,6 +3,7 @@ import { BrowserRouter,Routes, Route, Navigate, Outlet  } from "react-router-dom
 import Auth from "../views/Auth";
 import Home from "../views/Home"
 import Profile from "../views/Profile"
+import Update from "../views/Update"
 
 const Index = () =>{
     const PrivateRoute = () => {
@@ -20,10 +21,13 @@ const Index = () =>{
             <Route path="/">
                 <Route index element={<Auth/>}/>
                 <Route path="home" element={<PrivateRoute/>} >
-						    <Route index element={<Home />} />
-                        </Route>
+			    <Route index element={<Home />} />
+                </Route>
                 <Route path="/Profile" element={<PrivateRoute />}>
-          <Route index element={<Profile />} />
+                <Route index element={<Profile />} />
+                </Route>
+                <Route path="/Update/:id" element={<PrivateRoute />}>
+          <Route index element={<Update />} />
           </Route>
             </Route>
         </Routes>

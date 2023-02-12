@@ -84,7 +84,7 @@ const Index = () => {
       .then((response) => {
         // console.log(response.data.token.data)
         console.log(response.data);
-        if (response.data == "") {
+        if (response.data.data.rowCount == 0) {
           alert("Data Tidak ada");
         } else {
           return navigate(`/Profile?search=${Search}`);

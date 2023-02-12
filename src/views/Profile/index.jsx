@@ -96,7 +96,7 @@ const Index = () => {
   
   return (
     <>
-    {/* {JSON.stringify(dataSearch)} */}
+    {JSON.stringify(dataSearch)}
       <div className="container-fluid">
         <Nav />
         <div className="container">
@@ -104,13 +104,13 @@ const Index = () => {
             <h4>List Product</h4>
             <div className="row d-flex justify-content-center">
 
-              {dataSearch.map((item, index)=>(
+              {dataSearch && dataSearch.map((item, index)=>(
                 <div key={index} className="col-md-3  ">
                 <div className={` ${Style.cards} `}>
                   <img src={item.photo_url} className={Style.listImg} alt="..." />
                   <div className={`card-body ${Style.texts}`}>
                     <h5 className="card-title">{item.product_name}</h5>
-                    <p className="card-text">
+                    <p className="card-text py-3">
                       <p>harga Jual: {item.pricej}</p>
                       <p>harga Beli: {item.priceb}</p>
                       <p>Stock     : {item.stock}</p>

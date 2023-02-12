@@ -2,34 +2,31 @@ import React, { useRef, useState,useEffect  } from "react";
 import Footer from "../../component/footer";
 import Style from "./style.module.css";
 import Nav from "../../component/nav";
-import ayam from "../../assets/maxresdefault.jpg";
 import addPhoto from "../../assets/addphoto.PNG";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import axios from 'axios'
 
 const Index = () => {
-  const hiddenFileInput = useRef(null);
+  
   const navigate = useNavigate();
   const [product, setProduct] = useState([]);
-  const [imageProduct, setImageProduct] = useState();
+  // const [imageProduct, setImageProduct] = useState();
   const [page, setPage] = useState(1);
   const [dataID,setDataID]= useState([])
   let total = "";
-  const handleClick = (event) => {
-    hiddenFileInput.current.click();
-  };
-  const handleChange = (event) => {
-    const fileUploaded = event.target.files[0];
-    document.getElementById("customBtn").innerHTML = fileUploaded.name;
-    // setImage(fileUploaded);
-  };
+  // const handleClick = (event) => {
+  //   hiddenFileInput.current.click();
+  // };
+  // const handleChange = (event) => {
+  //   const fileUploaded = event.target.files[0];
+  //   document.getElementById("customBtn").innerHTML = fileUploaded.name;
+  //   // setImage(fileUploaded);
+  // };
   const [data, setData] = useState([]);
   useEffect(() => {
     getData( page)
     const datauser = JSON.parse(localStorage.getItem("name"));
     const id_user = datauser.data.id_seller;
-    // console.log("id",id_user)
-    getDetailid(dataID)
   }, [ page])
  const getData=() => {
     axios
@@ -71,48 +68,25 @@ const Index = () => {
           alert("Delete Failed");
         })
   };
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const datauser = JSON.parse(localStorage.getItem("name"));
-    const id_user = datauser.data.id_seller;
-    console.log(id_user)
-    let body = new FormData ()
-        body.append("seller", id_user);
-        body.append("product_name", product.product_name);
-        body.append("pricej", product.pricej);
-        body.append("stock", product.stock);
-        body.append("photo", imageProduct);
-        body.append("description", "aa");
-        body.append("priceb", product.priceb);
-        axios.post((`${process.env.REACT_APP_BACKEND_URL}/insert`), body)
-            .then((response) => {
-                    alert("data berhasil ditambahkan")
-                    console.log(response.data)
-                    return navigate('/home')
-                // console.log(response.data)
-                // return navigate('/')
-            }).catch((err) => {
-                alert(err)            })   
-          }
-          const getDetailid = (id_product) =>{
-            axios.get(`${process.env.REACT_APP_BACKEND_URL}/productlist/${id_product}`)
-            .then((response) => {
-              alert(response.data.rows)
-              setDataID(response.data)
-              // console.log(response.data[0]);
-              // setTitle(response.data[0].nama_recipe)
-              // setingredients(response.data[0].ingredients.split(','))
-              // SetImage(response.data[0].image)
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+        //   const getDetailid = (id_product) =>{
+        //     axios.get(`${process.env.REACT_APP_BACKEND_URL}/productlist/${id_product}`)
+        //     .then((response) => {
+        //       alert(response.data.rows)
+        //       setDataID(response.data)
+        //       // console.log(response.data[0]);
+        //       // setTitle(response.data[0].nama_recipe)
+        //       // setingredients(response.data[0].ingredients.split(','))
+        //       // SetImage(response.data[0].image)
+        //     })
+        //     .catch((err) => {
+        //       console.log(err);
+        //     });
             
-        }
+        // }
   
   return (
     <>
-    {JSON.stringify(dataID)}
+    {/* {JSON.stringify(dataID)} */}
       <div className="container-fluid">
         <Nav />
         <div className="container">
@@ -124,8 +98,8 @@ const Index = () => {
                 <div className={` ${Style.cards} `}>
                   <img src={item.photo_url} className={Style.listImg} alt="..." />
                   <div className={`card-body ${Style.texts}`}>
-                    <h5 className="card-title">{item.product_name}</h5>
-                    <p className="card-text">
+                    <h5 className="card-title ">{item.product_name}</h5>
+                    <p className="card-text py-2">
                       <p>harga Jual: {item.pricej}</p>
                       <p>harga Beli: {item.priceb}</p>
                       <p>Stock     : {item.stock}</p>
@@ -137,15 +111,16 @@ const Index = () => {
                       <div
                         className={`d-flex justify-content-center ${Style.profile}`}
                       >
+                        <Link to={`/Update/${item.id_product}`}>
                         <button
                           type="button"
                           className="btn btn-primary ms-2"
-                          data-bs-toggle="modal"
-                          data-bs-target="#exampleModal4"
+                          
                         >
                           Update
                         </button>
-                        <div
+                        </Link>
+                        {/* <div
                           className="modal fade modal-xl"
                           id="exampleModal4"
                           tabIndex="-1"
@@ -239,7 +214,7 @@ const Index = () => {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                       <div
                         className={`d-flex justify-content-center ${Style.profile}`}

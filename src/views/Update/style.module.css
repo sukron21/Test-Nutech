@@ -1,0 +1,61 @@
+.bg{
+    background-color: white;
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+.cards{
+width:200px;
+height:350px;
+background:#F0F1F9;
+border: 3px black;
+margin-top: 30px;
+margin-right: 100px;
+}
+.listImg{
+    object-fit:cover;
+    width: 100%;
+    height: 150px;
+    /* height: fit-content; */
+    /* width: 18vw; */
+}
+.texts{
+    padding-top: 10px;
+}
+.addPhoto{
+    background-color: rgb(201, 197, 197);
+    height: 200px;
+    margin-left: 21%;
+}
+.costuminput{
+    background-color:#F6F5F4 !important;
+}
+.btnUpdate{
+    width: 70% !important;
+}
+@media screen and (max-width: 990px) {
+    .cards{
+        width:170px;
+        height:350px;
+        background:#F0F1F9;
+        border: 3px black;
+        margin-top: 30px;
+        /* margin-left: 1000px; */
+        }
+}
+@media screen and (max-width: 765px) {
+    .cards{
+        width:100%;
+        height:350px;
+        background:#F0F1F9;
+        border: 3px black;
+        margin-top: 30px;
+        /* margin-left: 1000px; */
+    }
+    .listImg{
+        object-fit:cover;
+        width: 100%;
+        height: 150px;
+        /* height: fit-content; */
+        /* width: 18vw; */
+    }
+}
