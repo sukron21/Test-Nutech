@@ -55,6 +55,7 @@ const onSubmitRegist = (e) => {
               alert(response.data.message);
             } else {
               alert("data berhasil ditambahkan");
+              window.location.reload();
             }
           })
           .catch((err) => {
