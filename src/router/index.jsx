@@ -4,6 +4,7 @@ import Auth from "../views/Auth";
 import Home from "../views/Home"
 import Profile from "../views/Profile"
 import Update from "../views/Update"
+import Hal2 from "../views/hal2"
 
 const Index = () =>{
     const PrivateRoute = () => {
@@ -27,8 +28,11 @@ const Index = () =>{
                 <Route index element={<Profile />} />
                 </Route>
                 <Route path="/Update/:id" element={<PrivateRoute />}>
-          <Route index element={<Update />} />
-          </Route>
+                <Route index element={<Update />} />
+                </Route>
+                <Route path="/hal2" element={<PrivateRoute />}>
+                <Route index element={<Hal2/>} />
+                </Route>
             </Route>
         </Routes>
         </BrowserRouter>

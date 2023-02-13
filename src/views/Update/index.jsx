@@ -8,49 +8,52 @@ import axios from "axios";
 
 const Index = () => {
   const navigate = useNavigate();
-  const hiddenFileInput = useRef(null);
-  const [imageProduct, setImageProduct] = useState('');
   const [dataSearch, setDataSearch] = useState();
+  const [dataUpdate, setDataUpdate] = useState()
   const { id } = useParams();
-  const handleClick = (event) => {
-    hiddenFileInput.current.click();
-};
-const handleChange = (event) => {
-  const fileUploaded = event.target.files[0];
-  document.getElementById("customBtn").innerHTML = fileUploaded.name;
-  setImageProduct(fileUploaded);
-};
-const [product, setProduct] = useState([])
+
  
   // console.log("data",dataSearch[0].stock)
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/productlist/${id}`)
       .then((response) => {
-        console.log(response.data.data.rows);
+        // console.log("didigidaw",response.data.data.rows[0]);
         setDataSearch(response.data.data.rows);
+        setDataUpdate(response.data.data.rows[0])
       })
       .catch((err) => {
         console.log(err); 
       });
   }, [id]);
-  const onSubmit = (e) => {
+  const [update, setUpdate] = useState({
+    product_name: dataUpdate&&dataUpdate.product_name,
+    pricej: dataUpdate&&dataUpdate.pricej,
+    stock: dataUpdate&&dataUpdate.stock,
+    description: dataUpdate&&dataUpdate.description,
+    priceb: dataUpdate&&dataUpdate.priceb
+  });
+  const handlePost = (e) => {
     e.preventDefault();
-    // alert(dataSearch[0].product_name)
-    let body = new FormData ()
-        body.append("product_name", product.product_name);
-        body.append("pricej", product.pricej);
-        body.append("stock", product.stock);
-        body.append("description", "aa");
-        body.append("priceb", product.priceb);
-        axios.post((`${process.env.REACT_APP_BACKEND_URL}/product/update/${id}`), body)
-            .then((response) => {
-                alert("data berhasil ditambahkan")
-                console.log(response.data)
-                return navigate('/home')
-            }).catch((err) => {
-                alert(err)            })   
-          } 
+    const form = {
+      product_name: update.product_name,
+      pricej: update.pricej,
+      stock: update.stock,
+      description: update.description,
+      priceb: update.priceb,
+    };
+    axios
+      .put(`${process.env.REACT_APP_BACKEND_URL}/product/update/${id}`, form)
+      .then((res) => {
+        console.log(res);
+        alert("Update Success");
+        return navigate("/home");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Update Failed");
+      });
+  };
 
   return (
     <>
@@ -72,19 +75,20 @@ const [product, setProduct] = useState([])
                   <h5
                     // className="text-muted"
                     id="customBtn"
-                    onClick={handleClick}
+                    // onClick={handleClick}
                   >
-                    {item.photo_pub_id}
+                    {/* {item.photo_pub_id} */}
                   </h5>
                   <input
                     className=""
                     type="file"
-                    ref={hiddenFileInput}
+                    // ref={hiddenFileInput}
                     id="formFile"
-                    onChange={handleChange}
+                    // onChange={handleChange}
                     // defaultValue={item.photo_url}
                     // style={{ display: "none" }}
                   />
+                  {item.photo_pub_id}
                 </div>
               </div>
               <div className="d-flex justify-content-center">
@@ -96,7 +100,7 @@ const [product, setProduct] = useState([])
                       id="floatingInputGroup1"
                       defaultValue={item.product_name}
                       onChange={(e) =>
-                        setProduct({ ...product, product_name: e.target.value })
+                        setUpdate({ ...update, product_name: e.target.value })
                       }
                     />
                     <label htmlFor="floatingInputGroup1 ">Nama Product</label>
@@ -109,7 +113,7 @@ const [product, setProduct] = useState([])
                       placeholder="Title"
                       defaultValue={item.pricej}
                       onChange={(e) =>
-                        setProduct({ ...product, pricej: e.target.value })
+                        setUpdate({ ...update, pricej: e.target.value })
                       }
                     />
 
@@ -123,7 +127,7 @@ const [product, setProduct] = useState([])
                       placeholder="Title"
                       defaultValue={item.priceb}
                       onChange={(e) =>
-                        setProduct({ ...product, priceb: e.target.value })
+                        setUpdate({ ...update, priceb: e.target.value })
                       }
                     />
                     <label htmlFor="floatingInputGroup1 ">Harga Beli</label>
@@ -136,14 +140,14 @@ const [product, setProduct] = useState([])
                       placeholder="Title"
                       defaultValue={item.stock}
                       onChange={(e) =>
-                        setProduct({ ...product, stock: e.target.value })
+                        setUpdate({ ...update, stock: e.target.value })
                       }
                     />
                     <label htmlFor="floatingInputGroup1 ">Stock</label>
                   </div>
                   <div className="d-flex justify-content-center pt-5">
                     <button
-                      onClick={onSubmit}
+                      onClick={handlePost}
                       className={`btn btn-primary ${Style.btnUpdate}`}
                     >
                       woi

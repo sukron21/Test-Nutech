@@ -53,7 +53,8 @@ const Index = () => {
                 alert("data berhasil ditambahkan")
                 console.log(response.data)
                 return navigate('/home')
-              }
+                window.location.reload();
+            }
                     // alert("data berhasil ditambahkan")
                     // console.log(response.data)
                     // return navigate('/home')
@@ -87,8 +88,10 @@ const Index = () => {
         if (response.data.data.rowCount == 0) {
           alert("Data Tidak ada");
         } else {
+          window.location.reload();
           return navigate(`/Profile?search=${Search}`);
         }
+        
       })
       .catch((err) => {
         console.log(err);

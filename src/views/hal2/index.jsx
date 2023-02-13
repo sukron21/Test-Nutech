@@ -43,14 +43,12 @@ const Index = () => {
   const NextPage = () => {
     setPage(page + 1);
     getData(5, page)
-    // window.location.reload();
   };
   const PreviousPage = () => {
     if (page > 1) {
       setPage(page - 1);
       getData(5, page)
       console.log(page);
-      // window.location.reload();
     }
   };
   
@@ -63,8 +61,7 @@ const Index = () => {
           const posts = product.filter((item) => item.id_product !== id_product);
           setProduct({ data: posts });
           alert("Delete Success");
-          window.location.reload();
-          // return navigate("/home");
+          return navigate("/home");
         })
         .catch((err) => {
           console.log(err);
