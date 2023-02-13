@@ -3,7 +3,7 @@ import Nutech from "../../assets/Nutech.PNG";
 import Style from "../nav/style.module.css";
 import Pp from "../../assets/pp.png";
 import addPhoto from "../../assets/addphoto.PNG";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import axios from 'axios'
 
 
@@ -103,11 +103,13 @@ const Index = () => {
       <div className="container-fluid">
         <nav className="navbar navbar-expand-lg bg-light">
           <div className="container-fluid">
+            <Link to="/home">
             <img
               src={Nutech}
               alt=""
               // width="130" height="30"
             />
+            </Link>
             <button
               className="navbar-toggler"
               type="button"
