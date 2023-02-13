@@ -52,8 +52,9 @@ const Index = () => {
               }else{
                 alert("data berhasil ditambahkan")
                 console.log(response.data)
-                return navigate('/home')
                 window.location.reload();
+                return navigate('/home')
+                
             }
                     // alert("data berhasil ditambahkan")
                     // console.log(response.data)
