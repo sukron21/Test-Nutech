@@ -7,11 +7,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const Index = () => {
+  const hiddenFileInput = useRef(null);
   const navigate = useNavigate();
   const [dataSearch, setDataSearch] = useState();
   const [dataUpdate, setDataUpdate] = useState()
+  const [imageProduct, setImageProduct] = useState();
   const { id } = useParams();
-
+  const handleClick = (event) => {
+    hiddenFileInput.current.click();
+  };
+  const handleChange = (event) => {
+    const fileUploaded = event.target.files[0];
+    document.getElementById("customBtn").innerHTML = fileUploaded.name;
+    setImageProduct(fileUploaded);
+  };
  
   // console.log("data",dataSearch[0].stock)
   useEffect(() => {
@@ -35,6 +44,8 @@ const Index = () => {
   });
   const handlePost = (e) => {
     e.preventDefault();
+    // alert(imageProduct)
+    // console.log(imageProduct.name)
     const form = {
       product_name: update.product_name,
       pricej: update.pricej,
@@ -46,6 +57,7 @@ const Index = () => {
       .put(`${process.env.REACT_APP_BACKEND_URL}/product/update/${id}`, form)
       .then((res) => {
         console.log(res);
+        // console.log(imageProduct.name)
         alert("Update Success");
         return navigate("/home");
       })
@@ -53,6 +65,23 @@ const Index = () => {
         console.log(err);
         alert("Update Failed");
       });
+      console.log(imageProduct.name)
+      if(imageProduct!==undefined){
+        let body = new FormData ()
+        body.append("photo", imageProduct);
+        axios
+        .put(`${process.env.REACT_APP_BACKEND_URL}/product/update/photo/${id}`, body)
+        .then((res) => {
+          console.log(res);
+          // console.log(imageProduct.name)
+          alert("Update Success");
+          return navigate("/home");
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("Update Failed");
+        });
+      }
   };
 
   return (
@@ -75,22 +104,24 @@ const Index = () => {
                   <h5
                     // className="text-muted"
                     id="customBtn"
-                    // onClick={handleClick}
+                    onClick={handleClick}
                   >
                     {/* {item.photo_pub_id} */}
                   </h5>
                   <input
                     className=""
                     type="file"
-                    // ref={hiddenFileInput}
+                    ref={hiddenFileInput}
                     id="formFile"
-                    // onChange={handleChange}
+                    onChange={handleChange}
                     // defaultValue={item.photo_url}
                     // style={{ display: "none" }}
                   />
-                  {item.photo_pub_id}
+                  
                 </div>
-              </div>
+                <div className="d-flex justify-content-center">
+                File Sebelumnya : {item.photo_pub_id}
+              </div></div>
               <div className="d-flex justify-content-center">
                 <div className="col-md-7 mb-4 ">
                   <div className="form-floating pt-3">
