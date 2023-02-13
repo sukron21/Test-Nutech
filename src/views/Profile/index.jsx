@@ -4,7 +4,7 @@ import Style from "./style.module.css";
 import Nav from "../../component/nav";
 import ayam from "../../assets/maxresdefault.jpg";
 import addPhoto from "../../assets/addphoto.PNG";
-import { useNavigate,useSearchParams } from "react-router-dom";
+import { useNavigate,useSearchParams,Link } from "react-router-dom";
 import axios from 'axios'
 
 const Index = () => {
@@ -119,7 +119,16 @@ const Index = () => {
                     <div
                       className={`d-flex justify-content-center ${Style.profile}`}
                     >
-                      <div
+                      <Link to={`/Update/${item.id_product}`}>
+                        <button
+                          type="button"
+                          className="btn btn-primary ms-2"
+                          
+                        >
+                          Update
+                        </button>
+                        </Link>
+                      {/* <div
                         className={`d-flex justify-content-center ${Style.profile}`}
                       >
                         <button
@@ -227,7 +236,7 @@ const Index = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                       <div
                         className={`d-flex justify-content-center ${Style.profile}`}
                       >
