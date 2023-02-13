@@ -220,7 +220,7 @@ const Index = () => {
                                         onChange={(e) =>  setProduct({...product,priceb: e.target.value})}/>
                                         <label htmlFor="floatingInputGroup1 ">Harga Beli</label>
                                     </div>
-                                    <div className="form-floating">
+                                    <div className="form-floating pt-3">
                                         <input type="number" className={`form-control ${Style.costuminput}`} id="floatingInputGroup1" placeholder="Title" 
                                         onChange={(e) =>  setProduct({...product,stock: e.target.value})}/>
                                         <label htmlFor="floatingInputGroup1 ">Stock</label>
