@@ -88,8 +88,9 @@ const Index = () => {
         if (response.data.data.rowCount == 0) {
           alert("Data Tidak ada");
         } else {
+          navigate(`/Profile?search=${Search}`)
           window.location.reload();
-          return navigate(`/Profile?search=${Search}`);
+          // return navigate(`/Profile?search=${Search}`);
         }
         
       })

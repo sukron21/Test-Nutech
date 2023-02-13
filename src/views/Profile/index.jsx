@@ -96,7 +96,7 @@ const Index = () => {
   
   return (
     <>
-    {JSON.stringify(dataSearch)}
+    {/* {JSON.stringify(dataSearch)} */}
       <div className="container-fluid">
         <Nav />
         <div className="container">
