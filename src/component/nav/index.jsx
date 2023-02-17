@@ -147,7 +147,7 @@ const Index = () => {
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal100"
                         >
-                          +AddProduct
+                          AddProduct
                         </button>
 
                         {/* <!-- Modal --> */}

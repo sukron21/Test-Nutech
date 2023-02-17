@@ -18,9 +18,13 @@
     background-color: rgb(201, 197, 197);
     height: 200px;
     margin-left: 21%;
+    border-radius: 5px;
 }
 .logout{
     border-color: white;
+}
+.newModal{
+    width: 300%;
 }
 @media screen and (max-width: 1160px) {
 

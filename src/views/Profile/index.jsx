@@ -1,22 +1,22 @@
-import React, { useRef, useState,useEffect  } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Footer from "../../component/footer";
 import Style from "./style.module.css";
 import Nav from "../../component/nav";
 import ayam from "../../assets/maxresdefault.jpg";
 import addPhoto from "../../assets/addphoto.PNG";
-import { useNavigate,useSearchParams,Link } from "react-router-dom";
-import axios from 'axios'
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import axios from "axios";
 
 const Index = () => {
   const hiddenFileInput = useRef(null);
-  const [queryparams]=useSearchParams();
-  const search = queryparams.get('search');
+  const [queryparams] = useSearchParams();
+  const search = queryparams.get("search");
   const navigate = useNavigate();
   const [product, setProduct] = useState([]);
   const [imageProduct, setImageProduct] = useState();
-  const [dataSearch, setDataSearch] =useState()
-//   const [ID, setID] = useState ()
-//   const [modal, setModal] = useState()
+  const [dataSearch, setDataSearch] = useState();
+  //   const [ID, setID] = useState ()
+  //   const [modal, setModal] = useState()
 
   let total = "";
   const handleClick = (event) => {
@@ -31,8 +31,8 @@ const Index = () => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/productlist/limit/${search}`)
       .then((response) => {
-        console.log(response.data)
-        setDataSearch(response.data.data.rows)
+        console.log(response.data);
+        setDataSearch(response.data.data.rows);
         // console.log(response.data[0]);
         // setTitle(response.data[0].nama_recipe)
         // setingredients(response.data[0].ingredients.split(','))
@@ -41,94 +41,99 @@ const Index = () => {
       .catch((err) => {
         console.log(err);
       });
-      
-  },[]);
- 
-  
+  }, []);
+
   const deleteProduct = (id_product, e) => {
     e.preventDefault();
     // console.log(id_product)
-    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/product/delete/${id_product}`)
-        .then((response) => {
-          console.log(response);
-          console.log(response.data);
-          const posts = product.filter((item) => item.id_product !== id_product);
-          setProduct({ data: posts });
-          alert("Delete Success");
-          return navigate("/home");
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("Delete Failed");
-        })
+    axios
+      .delete(
+        `${process.env.REACT_APP_BACKEND_URL}/product/delete/${id_product}`
+      )
+      .then((response) => {
+        console.log(response);
+        console.log(response.data);
+        const posts = product.filter((item) => item.id_product !== id_product);
+        setProduct({ data: posts });
+        alert("Delete Success");
+        return navigate("/home");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Delete Failed");
+      });
   };
   const onSubmit = (e) => {
     e.preventDefault();
     const datauser = JSON.parse(localStorage.getItem("name"));
     const id_user = datauser.data.id_seller;
-    console.log(id_user)
-    let body = new FormData ()
-        body.append("seller", id_user);
-        body.append("product_name", product.product_name);
-        body.append("pricej", product.pricej);
-        body.append("stock", product.stock);
-        body.append("photo", imageProduct);
-        body.append("description", "aa");
-        body.append("priceb", product.priceb);
-        axios.post((`${process.env.REACT_APP_BACKEND_URL}/insert`), body)
-            .then((response) => {
-                    alert("data berhasil ditambahkan")
-                    console.log(response.data)
-                    return navigate('/home')
-                // console.log(response.data)
-                // return navigate('/')
-            }).catch((err) => {
-                alert(err)            })   
-          }
-    // const toggleModal = () => {
-    //     setModal((prevstate)=> ! prevstate)
-    // }
-    // const Detail = (id) =>{
-    //     toggleModal();
-    //     setID (()=>id)     
-    // }
+    console.log(id_user);
+    let body = new FormData();
+    body.append("seller", id_user);
+    body.append("product_name", product.product_name);
+    body.append("pricej", product.pricej);
+    body.append("stock", product.stock);
+    body.append("photo", imageProduct);
+    body.append("description", "aa");
+    body.append("priceb", product.priceb);
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/insert`, body)
+      .then((response) => {
+        alert("data berhasil ditambahkan");
+        console.log(response.data);
+        return navigate("/home");
+        // console.log(response.data)
+        // return navigate('/')
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+  // const toggleModal = () => {
+  //     setModal((prevstate)=> ! prevstate)
+  // }
+  // const Detail = (id) =>{
+  //     toggleModal();
+  //     setID (()=>id)
+  // }
 
-  
   return (
     <>
-    {/* {JSON.stringify(dataSearch)} */}
+      {/* {JSON.stringify(dataSearch)} */}
       <div className="container-fluid">
         <Nav />
         <div className="container">
           <div className={Style.bg}>
             <h4>List Product</h4>
             <div className="row d-flex justify-content-center">
-
-              {dataSearch && dataSearch.map((item, index)=>(
-                <div key={index} className="col-md-3  ">
-                <div className={` ${Style.cards} `}>
-                  <img src={item.photo_url} className={Style.listImg} alt="..." />
-                  <div className={`card-body ${Style.texts}`}>
-                    <h5 className="card-title">{item.product_name}</h5>
-                    <p className="card-text py-3">
-                      <p>harga Jual: {item.pricej}</p>
-                      <p>harga Beli: {item.priceb}</p>
-                      <p>Stock     : {item.stock}</p>
-                      
-                    </p>
-                    <div
-                      className={`d-flex justify-content-center ${Style.profile}`}
-                    >
-                      <Link to={`/Update/${item.id_product}`}>
-                        <button
-                          type="button"
-                          className="btn btn-primary ms-2"
-                          
+              {dataSearch &&
+                dataSearch.map((item, index) => (
+                  <div key={index} className="col-md-3  ">
+                    <div className={` ${Style.cards} `}>
+                      <img
+                        src={item.photo_url}
+                        className={Style.listImg}
+                        alt="..."
+                      />
+                      <div className={`card-body ${Style.texts}`}>
+                        <h5 className="card-title">{item.product_name}</h5>
+                        <p className="card-text py-3">
+                          <p>harga Jual: {item.pricej}</p>
+                          <p>harga Beli: {item.priceb}</p>
+                          <p>Stock : {item.stock}</p>
+                        </p>
+                        <div
+                          className={`d-flex justify-content-center ${Style.profile}`}
                         >
-                          Update
-                        </button>
-                        </Link>
-                      {/* <div
+                          <Link to={`/Update/${item.id_product}`}>
+                            <button
+                              type="button"
+                              className="btn btn-primary ms-2"
+                            >
+                              Update
+                            </button>
+                          </Link>
+                          {/* <div
                         className={`d-flex justify-content-center ${Style.profile}`}
                       >
                         <button
@@ -237,58 +242,63 @@ const Index = () => {
                           </div>
                         </div>
                       </div> */}
-                      <div
-                        className={`d-flex justify-content-center ${Style.profile}`}
-                      >
-                        <button
-                          type="button"
-                          className="btn btn-primary ms-2"
-                          data-bs-toggle="modal"
-                          data-bs-target="#exampleModal1"
-                        >
-                          Delete
-                        </button>
+                          <div
+                            className={`d-flex justify-content-center ${Style.profile}`}
+                          >
+                            <button
+                              type="button"
+                              className="btn btn-primary ms-2"
+                              data-bs-toggle="modal"
+                              data-bs-target="#exampleModal1"
+                            >
+                              Delete
+                            </button>
 
-                       
-                        <div
-                          className="modal fade"
-                          id="exampleModal1"
-                          tabIndex="-1"
-                          aria-labelledby="exampleModalLabel"
-                          aria-hidden="true"
-                        >
-                          <div className="modal-dialog">
-                            <div className="modal-content">
-                              <div className="modal-header">
-                                <h1
-                                  className="modal-title fs-5"
-                                  id="exampleModalLabel"
-                                >
-                                  Delete
-                                </h1>
-                                <button
-                                  type="button"
-                                  className="btn-close"
-                                  data-bs-dismiss="modal"
-                                  aria-label="Close"
-                                ></button>
-                              </div>
-                              <div className="modal-body">
-                                Apakah anda yakin untuk menghapus data
-                              </div>
-                              <div className="modal-footer">
-                                <button
-                                  type="button"
-                                  className="btn btn-secondary"
-                                  data-bs-dismiss="modal"
-                                >
-                                  Close
-                                </button>
-                                <button type="button" className="btn btn-primary"
-                                 onClick={(e) => deleteProduct(item.id_product, e)}
-                                 >
-                                  Save changes
-                                </button>
+                            <div
+                              className="modal fade"
+                              id="exampleModal1"
+                              tabIndex="-1"
+                              aria-labelledby="exampleModalLabel"
+                              aria-hidden="true"
+                            >
+                              <div className="modal-dialog">
+                                <div className="modal-content">
+                                  <div className="modal-header">
+                                    <h1
+                                      className="modal-title fs-5"
+                                      id="exampleModalLabel"
+                                    >
+                                      Delete
+                                    </h1>
+                                    <button
+                                      type="button"
+                                      className="btn-close"
+                                      data-bs-dismiss="modal"
+                                      aria-label="Close"
+                                    ></button>
+                                  </div>
+                                  <div className="modal-body">
+                                    Apakah anda yakin untuk menghapus data
+                                  </div>
+                                  <div className="modal-footer">
+                                    <button
+                                      type="button"
+                                      className="btn btn-secondary"
+                                      data-bs-dismiss="modal"
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="btn btn-primary"
+                                      onClick={(e) =>
+                                        deleteProduct(item.id_product, e)
+                                      }
+                                    >
+                                      Save changes
+                                    </button>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -296,11 +306,8 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-                
-              ))}
-              </div>
+                ))}
+            </div>
           </div>
         </div>
         <Footer />

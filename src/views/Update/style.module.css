@@ -25,6 +25,7 @@ margin-right: 100px;
     background-color: rgb(201, 197, 197);
     height: 200px;
     margin-left: 21%;
+    border-radius: 5px;
 }
 .costuminput{
     background-color:#F6F5F4 !important;
