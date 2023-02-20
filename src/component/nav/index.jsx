@@ -5,6 +5,7 @@ import Pp from "../../assets/pp.png";
 import addPhoto from "../../assets/addphoto.PNG";
 import { useNavigate,Link } from "react-router-dom";
 import axios from 'axios'
+import swal from 'sweetalert';
 
 
 const Index = () => {
@@ -33,7 +34,7 @@ const Index = () => {
     e.preventDefault();
     const datauser = JSON.parse(localStorage.getItem("name"));
     const id_user = datauser.data.id_seller;
-    console.log(id_user)
+    // console.log(id_user)
     let body = new FormData ()
         body.append("seller", id_user);
         body.append("product_name", product.product_name);
@@ -45,13 +46,30 @@ const Index = () => {
         axios.post((`${process.env.REACT_APP_BACKEND_URL}/insert`), body)
             .then((response) => {
               if(response.data.status=="failed"){
-                alert("nama sudah terdaftar")
+                // alert("nama sudah terdaftar")
+                swal({
+                  icon: 'error',
+                  title: 'Nama Product sudah terdaftar',
+                  showConfirmButton: false,
+                  timer: 5000,
+                });
               }else if(response.data.message=="upload product photo failed bor"){
-              alert("ukuran file melebihi 100kb atau type file tidak didukung mohon masukkan type gambar .jpg atau .png ")
-                
+              // alert("ukuran file melebihi 100kb atau type file tidak didukung mohon masukkan type gambar .jpg atau .png ")
+              swal({
+                icon: 'error',
+                title: 'ukuran file melebihi 100kb atau type file tidak didukung mohon masukkan type gambar .jpg atau .png',
+                showConfirmButton: false,
+                timer: 5000,
+              });
               }else{
-                alert("data berhasil ditambahkan")
-                console.log(response.data)
+                swal({
+                  icon: 'success',
+                  title: 'Sucess to Add Data!',
+                  showConfirmButton: false,
+                  timer: 5000,
+                });
+                // alert("data berhasil ditambahkan")
+                // console.log(response.data)
                 // window.location.reload();
                  navigate('/home')
                  window.location.reload();
@@ -62,7 +80,14 @@ const Index = () => {
                 // console.log(response.data)
                 // return navigate('/')
             }).catch((err) => {
-                alert(err)            })   
+                // alert(err) 
+                swal({
+                  icon: 'error',
+                  title: (err),
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              })   
           }
   const handleClick = (event) => {
     hiddenFileInput.current.click();
@@ -74,20 +99,32 @@ const Index = () => {
   };
   const logout = () => {
     localStorage.clear();
-    alert("berhasil");
+    // alert("berhasil");
+    swal({
+      icon: 'success',
+      title: 'Sucess to Logout!',
+      showConfirmButton: false,
+      timer: 3000,
+    });
     return navigate("/");
   };
   const onSubmitSearch = (e) => {
     e.preventDefault();
-    console.log(Search);
+    // console.log(Search);
 
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/productlist/limit/${Search}`)
       .then((response) => {
         // console.log(response.data.token.data)
-        console.log(response.data);
+        // console.log(response.data);
         if (response.data.data.rowCount == 0) {
-          alert("Data Tidak ada");
+          // alert("Data Tidak ada");
+          swal({
+            icon: 'error',
+            title: "Data Tidak ada",
+            showConfirmButton: false,
+            timer: 3000,
+          });
         } else {
           navigate(`/Profile?search=${Search}`)
           window.location.reload();
@@ -96,7 +133,13 @@ const Index = () => {
         
       })
       .catch((err) => {
-        console.log(err);
+        swal({
+          icon: 'error',
+          title: (err),
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        // console.log(err);
       });
   };
   return (

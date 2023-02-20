@@ -5,22 +5,26 @@ import Nav from "../../component/nav";
 import addPhoto from "../../assets/addphoto.PNG";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import swal from 'sweetalert';
+
 
 const Index = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState([]);
-  // const [imageProduct, setImageProduct] = useState();
+  // const [modal, setModal]= useState(false)
+  const [id, setID] = useState("")
   const [page, setPage] = useState(1);
   const [dataID, setDataID] = useState([]);
   let total = "";
-  // const handleClick = (event) => {
-  //   hiddenFileInput.current.click();
-  // };
-  // const handleChange = (event) => {
-  //   const fileUploaded = event.target.files[0];
-  //   document.getElementById("customBtn").innerHTML = fileUploaded.name;
-  //   // setImage(fileUploaded);
-  // };
+  // const toggleModal = () =>{
+  //   setModal((prevstate)=>!prevstate)
+  // }
+  const handleDetail = (id) => {
+    // toggleModal()
+    setID(()=>id)
+    console.log(id)
+  }
+
   const [data, setData] = useState([]);
   useEffect(() => {
     getData(page);
@@ -37,7 +41,7 @@ const Index = () => {
         }`
       )
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setData(response.data.data.rows);
       })
       .catch((error) => {
@@ -53,29 +57,43 @@ const Index = () => {
     if (page > 1) {
       setPage(page - 1);
       getData(5, page);
-      console.log(page);
+      // console.log(page);
       // window.location.reload();
     }
   };
 
-  const deleteProduct = (id_product, e) => {
+  const deleteProduct = () => {
     // console.log(id_product)
+    // e.preventDefault();
     axios
       .delete(
-        `${process.env.REACT_APP_BACKEND_URL}/product/delete/${id_product}`
+        `${process.env.REACT_APP_BACKEND_URL}/product/delete/${id}`
       )
       .then((response) => {
         console.log(response);
-        console.log(response.data);
-        const posts = product.filter((item) => item.id_product !== id_product);
+        // console.log(id_product)
+        // console.log(response.data);
+        const posts = product.filter((item) => item.id === id);
         setProduct({ data: posts });
-        alert("Delete Success");
+        // alert("Delete Success");
+        swal({
+          icon: 'success',
+          title: 'Delete Success!',
+          showConfirmButton: false,
+          timer: 5000,
+        });
         window.location.reload();
         // return navigate("/home");
       })
       .catch((err) => {
-        console.log(err);
-        alert("Delete Failed");
+        // console.log(err);
+        // alert("Delete Failed");
+        swal({
+          icon: 'error',
+          title: "Delete Failed",
+          showConfirmButton: false,
+          timer: 5000,
+        });
       });
   };
   //   const getDetailid = (id_product) =>{
@@ -104,7 +122,7 @@ const Index = () => {
             <h4>List Product</h4>
             <div className="row d-flex justify-content-center">
               {data.map((item, index) => (
-                <div key={index} className="col-md-3  ">
+                <div key={index} className={`col-md-3 ${Style.cad}`}  >
                   <div className={` ${Style.cards} `}>
                     <img
                       src={item.photo_url}
@@ -132,101 +150,6 @@ const Index = () => {
                               Update
                             </button>
                           </Link>
-                          {/* <div
-                          className="modal fade modal-xl"
-                          id="exampleModal4"
-                          tabIndex="-1"
-                          aria-labelledby="exampleModalLabel"
-                          aria-hidden="true"
-                        >
-                          <div className="modal-dialog">
-                            <div className="modal-content">
-                              <div className="modal-header">
-                                <h1
-                                  className="modal-title fs-5"
-                                  id="exampleModalLabel"
-                                >
-                                  Update
-                                </h1>
-                                <button
-                                  type="button"
-                                  className="btn-close"
-                                  data-bs-dismiss="modal"
-                                  aria-label="Close"
-                                ></button>
-                              </div>
-                              <div className="modal-body">
-                                <div className="container ">
-                                  <form className=" mx-5">
-                                    <div 
-                                    className={`col-md-7 mb-4  
-                                     ${Style.addPhoto}`}
-                                     >
-                                      <div className="d-flex justify-content-center pt-5">
-                                      <img src={addPhoto} alt=""  />
-                                      </div>
-                                      <div className="d-flex justify-content-center">
-                                      <h5
-                                        // className="text-muted"
-                                        id="customBtn"
-                                        onClick={handleClick}
-                                      >
-                                        
-                                      </h5>
-                                      <input
-                                        className=""
-                                        type="file"
-                                        ref={hiddenFileInput}
-                                        id="formFile"
-                                        onChange={handleChange}
-                                        // style={{ display: "none" }}
-                                      />
-                                      </div>
-                                    </div>
-                                    <div className="d-flex justify-content-center">
-                                    <div className="col-md-7 mb-4 ">
-                                    <div className="form-floating pt-3">
-                                        <input type="text " className={`form-control ${Style.costuminput}`} id="floatingInputGroup1" placeholder="Title"
-                                        onChange={(e) =>  setProduct({...product, product_name: e.target.value})} />
-                                        <label htmlFor="floatingInputGroup1 ">Nama Product</label>
-                                    </div>
-                                    <div className="form-floating pt-3">
-                                        <input type="number" className={`form-control ${Style.costuminput}`} id="floatingInputGroup1" placeholder="Title" 
-                                        onChange={(e) =>  setProduct({...product, pricej: e.target.value})} />
-                                        <label htmlFor="floatingInputGroup1 ">Harga Jual</label>
-                                    </div>
-                                    <div className="form-floating pt-3">
-                                        <input type="number" className={`form-control ${Style.costuminput}`} id="floatingInputGroup1" placeholder="Title" 
-                                        onChange={(e) =>  setProduct({...product,priceb: e.target.value})}/>
-                                        <label htmlFor="floatingInputGroup1 ">Harga Beli</label>
-                                    </div>
-                                    <div className="form-floating">
-                                        <input type="number" className={`form-control ${Style.costuminput}`} id="floatingInputGroup1" placeholder="Title" 
-                                        onChange={(e) =>  setProduct({...product,stock: e.target.value})}/>
-                                        <label htmlFor="floatingInputGroup1 ">Stock</label>
-                                    </div>
-                                </div>
-                                </div>
-                                  </form>
-                                </div>
-                              </div>
-                              <div className="modal-footer">
-                                <button
-                                  type="button"
-                                  className="btn btn-secondary"
-                                  data-bs-dismiss="modal"
-                                >
-                                  Close
-                                </button>
-                                <button type="button" className="btn btn-primary"
-                                onClick={(e) => deleteProduct(item.id_product, e)}
-                               >
-                                  Save changes
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div> */}
                         </div>
                         <div
                           className={`d-flex justify-content-center ${Style.profile}`}
@@ -236,6 +159,9 @@ const Index = () => {
                             className="btn btn-primary ms-2"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModal1"
+                            onClick={(e) =>
+                              handleDetail(item.id_product)
+                            }
                           >
                             Delete
                           </button>
@@ -278,7 +204,7 @@ const Index = () => {
                                     type="button"
                                     className="btn btn-primary"
                                     onClick={(e) =>
-                                      deleteProduct(item.id_product, e)
+                                      deleteProduct()
                                     }
                                   >
                                     Save changes

@@ -5,6 +5,7 @@ import Nav from "../../component/nav";
 import addPhoto from "../../assets/addphoto.PNG";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import swal from 'sweetalert';
 
 const Index = () => {
   const hiddenFileInput = useRef(null);
@@ -56,14 +57,27 @@ const Index = () => {
     axios
       .put(`${process.env.REACT_APP_BACKEND_URL}/product/update/${id}`, form)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         // console.log(imageProduct.name)
-        alert("Update Success");
+        // alert("Update Success");
+        swal({
+          icon: 'success',
+          title: 'Sucess to Update Data!',
+          showConfirmButton: false,
+          timer: 5000,
+        });
         return navigate("/home");
       })
       .catch((err) => {
-        console.log(err);
-        alert("Update Failed");
+        // console.log(err);
+        swal({
+          icon: 'error',
+          title: "Update Failed",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+  
+        // alert("Update Failed");
       });
     // console.log(imageProduct.name);
     if (imageProduct !== undefined) {
@@ -75,15 +89,28 @@ const Index = () => {
           body
         )
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           // console.log(imageProduct.name)
-          alert("Update Success");
+          // alert("Update Success");
+          swal({
+            icon: 'success',
+            title: 'Sucess to Update Image!',
+            showConfirmButton: false,
+            timer: 5000,
+          });
            navigate("/home");
            window.location.reload();
         })
         .catch((err) => {
-          console.log(err);
-          alert("Update Failed");
+          // console.log(err);
+          // alert("Update Failed");
+          swal({
+            icon: 'error',
+            title: "Update Failed",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+    
         });
     }
   };

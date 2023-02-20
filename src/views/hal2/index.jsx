@@ -2,9 +2,9 @@ import React, { useRef, useState,useEffect  } from "react";
 import Footer from "../../component/footer";
 import Style from "./style.module.css";
 import Nav from "../../component/nav";
-import addPhoto from "../../assets/addphoto.PNG";
 import { useNavigate,Link } from "react-router-dom";
 import axios from 'axios'
+import swal from 'sweetalert';
 
 const Index = () => {
   
@@ -60,12 +60,24 @@ const Index = () => {
           console.log(response.data);
           const posts = product.filter((item) => item.id_product !== id_product);
           setProduct({ data: posts });
-          alert("Delete Success");
+          // alert("Delete Success");
+          swal({
+            icon: 'success',
+            title: 'Delete Success!',
+            showConfirmButton: false,
+            timer: 5000,
+          });
           return navigate("/home");
         })
         .catch((err) => {
-          console.log(err);
-          alert("Delete Failed");
+          // console.log(err);
+          // alert("Delete Failed");
+          swal({
+            icon: 'error',
+            title: "Delete Failed",
+            showConfirmButton: false,
+            timer: 5000,
+          });
         })
   };
         //   const getDetailid = (id_product) =>{

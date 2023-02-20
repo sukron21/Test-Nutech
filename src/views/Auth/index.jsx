@@ -3,6 +3,7 @@ import Nutech from "../../assets/Nutech.PNG";
 import Style from "./style.module.css";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import swal from 'sweetalert';
 
 
 const Index = () => {
@@ -19,20 +20,38 @@ const [registForm, setRegistForm] = useState({
   const navigate = useNavigate();
 const onSubmit = (e) => {
   e.preventDefault();
-  console.log(form)
+  // console.log(form)
   axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, form)
       .then((response) => {
-          console.log("data",response.data)
+          // console.log("data",response.data)
           if (response.data.status !== 'success') {
-              alert(response.data.message)
+              // alert(response.data.message)
+              swal({
+                icon: 'error',
+                title: 'failed to login!',
+                showConfirmButton: false,
+                timer: 5000,
+              });
           } else {
-              alert("berhasil Login")
+              // alert("berhasil Login")
+              swal({
+                icon: 'success',
+                title: 'Sucess to login!',
+                showConfirmButton: false,
+                timer: 5000,
+              });
               localStorage.setItem("name", JSON.stringify(response.data.data))
               localStorage.setItem("token", response.data.data.token);
               return navigate('/home')}
           })
       .catch((err) => {
-          console.log(err);
+        swal({
+          icon: 'error',
+          title: (err),
+          showConfirmButton: false,
+          timer: 5000,
+        });
+          // console.log(err);
       })      
 }
 const onSubmitRegist = (e) => {
@@ -52,14 +71,32 @@ const onSubmitRegist = (e) => {
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`, body)
           .then((response) => {
             if (response.data.status != "success") {
-              alert(response.data.message);
+              // alert(response.data.message);
+              swal({
+                icon: 'error',
+                title: (response.data.message),
+                showConfirmButton: false,
+                timer: 3000,
+              });
             } else {
-              alert("data berhasil ditambahkan");
+              // alert("data berhasil ditambahkan");
+              swal({
+                icon: 'success',
+                title: 'Sucess to Register!',
+                showConfirmButton: false,
+                timer: 3000,
+              });
               window.location.reload();
             }
           })
           .catch((err) => {
-            console.error(err);
+            // console.error(err);
+            swal({
+              icon: 'error',
+              title: 'Failed to register',
+              showConfirmButton: false,
+              timer: 1500,
+            });
           })
   }
 };
