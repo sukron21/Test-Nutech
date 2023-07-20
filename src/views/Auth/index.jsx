@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import Nutech from "../../assets/Nutech.PNG";
 import Style from "./style.module.css";
-import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import swal from 'sweetalert';
+import { login } from '../../redux/action/auth';
+import { register } from '../../redux/action/auth';
+import { useDispatch } from 'react-redux';
 
 
 const Index = () => {
+  const dispatch = useDispatch();
   const [active, setActive] = useState(1);
   const [form, setform] = useState({
     email: '',
@@ -20,16 +22,16 @@ const [registForm, setRegistForm] = useState({
   const navigate = useNavigate();
 const onSubmit = (e) => {
   e.preventDefault();
-  // console.log(form)
-  axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, form)
-      .then((response) => {
-          // console.log("data",response.data)
-          if (response.data.status !== 'success') {
-              // alert(response.data.message)
+
+  // axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, form)
+      // .then((response) => {
+        const handleSuccess = (data) => {
+          if (data.data.status !== 'success') {
+              
               swal({
                 icon: 'error',
                 title: 'failed to login!',
-                showConfirmButton: false,
+                buttons: false,
                 timer: 5000,
               });
           } else {
@@ -37,22 +39,14 @@ const onSubmit = (e) => {
               swal({
                 icon: 'success',
                 title: 'Sucess to login!',
-                showConfirmButton: false,
+                buttons: false,
                 timer: 5000,
               });
-              localStorage.setItem("name", JSON.stringify(response.data.data))
-              localStorage.setItem("token", response.data.data.token);
+              localStorage.setItem("name", JSON.stringify(data.data.data))
+              localStorage.setItem("token", data.data.data.token);
               return navigate('/home')}
-          })
-      .catch((err) => {
-        swal({
-          icon: 'error',
-          title: (err),
-          showConfirmButton: false,
-          timer: 5000,
-        });
-          // console.log(err);
-      })      
+          }
+          dispatch(login(form, handleSuccess));
 }
 const onSubmitRegist = (e) => {
   e.preventDefault();
@@ -62,42 +56,38 @@ const onSubmitRegist = (e) => {
     registForm.password === ""
   ) {
     alert("Semua input wajib diisi");
+    swal({
+      icon: 'error',
+      title: 'Semua input wajib diisi!',
+      buttons: false,
+      timer: 3000,
+    });
   } else {
     const body = {
       name: registForm.name,
       email: registForm.email,
       password: registForm.password,
     };
-      axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`, body)
-          .then((response) => {
-            if (response.data.status != "success") {
-              // alert(response.data.message);
+            const handleSuccess = (response) => {
+            if (response.data.status !== "success") {
               swal({
                 icon: 'error',
                 title: (response.data.message),
-                showConfirmButton: false,
+                buttons: false,
                 timer: 3000,
               });
             } else {
-              // alert("data berhasil ditambahkan");
               swal({
                 icon: 'success',
                 title: 'Sucess to Register!',
-                showConfirmButton: false,
+                buttons: false,
                 timer: 3000,
               });
               window.location.reload();
             }
-          })
-          .catch((err) => {
-            // console.error(err);
-            swal({
-              icon: 'error',
-              title: 'Failed to register',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          })
+          }
+          // )
+          dispatch(register(body, handleSuccess));
   }
 };
 
@@ -109,7 +99,6 @@ const onSubmitRegist = (e) => {
         >
           <div className="text-center">
             <div className={`d-flex justify-content-center`}>
-              <img src={Nutech} alt="" />
             </div>
             <div className={`d-flex justify-content-center my-3 `}>
               <h4>Hei, How Are You Today ?</h4>

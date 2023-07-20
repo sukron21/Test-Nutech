@@ -1,24 +1,25 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, {useRef, useState, useEffect } from "react";
 import Footer from "../../component/footer";
 import Style from "./style.module.css";
 import Nav from "../../component/nav";
-import addPhoto from "../../assets/addphoto.PNG";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import swal from "sweetalert";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
-import Modal from "../../component/modal";
-
+import swal from 'sweetalert';
+import addPhoto from "../../assets/addphoto.PNG";
 
 const Index = () => {
+  const [queryparams] = useSearchParams();
+  const search = queryparams.get("search");
+  const navigate = useNavigate();
   const [product, setProduct] = useState([]);
-  const [idNih, setID] = useState("");
-  const [idNew, setIDNew] = useState("");
-  const [page, setPage] = useState(1);
-  const hiddenFileInput = useRef(null);
   const [dataSearch, setDataSearch] = useState();
-  const [dataUpdate, setDataUpdate] = useState();
+  const [dataSearchDetail, setDataSearchDeatil] = useState();
+  const [ID, setID] = useState ()
   const [imageProduct, setImageProduct] = useState();
+  const [dataUpdate, setDataUpdate] = useState();
+  const [idNew, setIDNew] = useState("");
+  const hiddenFileInput = useRef(null);
+  
   const [update, setUpdate] = useState({
     product_name: dataUpdate && dataUpdate.product_name,
     pricej: dataUpdate && dataUpdate.pricej,
@@ -26,62 +27,41 @@ const Index = () => {
     description: dataUpdate && dataUpdate.description,
     priceb: dataUpdate && dataUpdate.priceb,
   });
-
-  const handleDetail = (id) => {
-    setID(() => id);
-    // console.log(id);
-  };
-
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    getData(page);
-  }, [page]);
-  const getData = () => {
-    axios
-      .get(
-        `${
-          process.env.REACT_APP_BACKEND_URL
-        }/productlist/limit?sort=product_name&asc=asc&limit=3${
-          page ? `&page=${page}` : ""
-        }`
-      )
-      .then((response) => {
-        // console.log(response.data.data);
-        setData(response.data.data.rows);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-  const NextPage = () => {
-    setPage(page + 1);
-    getData(5, page);
-    // window.location.reload();
-  };
-  const PreviousPage = () => {
-    if (page > 1) {
-      setPage(page - 1);
-      getData(5, page);
+    const handleDetail = (id) => {
+      setID(()=>id)
+      console.log(id)
     }
-  };
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/productlist/limit/${search}`)
+      .then((response) => {
+        setDataSearch(response.data.data.rows);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const deleteProduct = () => {
     axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/product/delete/${idNih}`)
+      .delete(
+        `${process.env.REACT_APP_BACKEND_URL}/product/delete/${ID}`
+      )
       .then((response) => {
-        const posts = product.filter((item) => item.id === idNih);
+        const posts = product.filter((item) => item.ID !== ID);
         setProduct({ data: posts });
         swal({
-          icon: "success",
-          title: "Delete Success!",
+          icon: 'success',
+          title: 'Delete Succes!',
           buttons: false,
           timer: 5000,
         });
+        navigate("/home");
         window.location.reload();
       })
       .catch((err) => {
         swal({
-          icon: "error",
+          icon: 'error',
           title: "Delete Failed",
           buttons: false,
           timer: 5000,
@@ -94,33 +74,35 @@ const Index = () => {
   const handleChange = (event) => {
     const fileUploaded = event.target.files[0];
     document.getElementById("customBtn").innerHTML = fileUploaded.name;
-    // setFileName(fileUploaded.name);
+    // setFileName(fileUploaded.name)
     setImageProduct(fileUploaded);
   };
   const handleUpdateButtonClick = (id) => {
     setIDNew(() => id);
     // fungsi lainnya
   };
-  useEffect(() => {
-    if (idNew !== "") {
-      getDataDetail();
+  useEffect(()=>{
+    if(idNew!==""){
+      getDataDetail()
     }
-  }, [idNew]);
+  },[idNew])
   const getDataDetail = () => {
-    axios
+      axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/productlist/${idNew}`)
       .then((response) => {
-        // console.log("anjink");
-        // console.log(response.data.data.rows[0]);
-        setDataSearch(response.data.data.rows[0]);
+        console.log("anjink")
+        console.log(response.data.data.rows[0])
+        setDataSearchDeatil(response.data.data.rows[0]);
         setDataUpdate(response.data.data.rows[0]);
         // console.log(dataSearch)
       })
       .catch((err) => {
         console.log(err);
       });
-  };
 
+    
+  };
+  
   const handlePost = (e) => {
     e.preventDefault();
     const form = {
@@ -140,128 +122,79 @@ const Index = () => {
             buttons: false,
             timer: 5000,
           });
-        } else if (imageProduct === undefined) {
+        }else if (imageProduct === undefined) {
           swal({
-            icon: "success",
-            title: "Sucess to Update Data!",
+            icon: 'success',
+            title: 'Sucess to Update Data!',
             buttons: false,
             timer: 5000,
           });
           window.location.reload();
-        } else {
+        }else{
           let body = new FormData();
-          body.append("photo", imageProduct);
-          axios
-            .put(
-              `${process.env.REACT_APP_BACKEND_URL}/product/update/photo/${idNew}`,
-              body
-            )
-            .then((response) => {
-              if (response.data.message === "upload product photo failed bor") {
-                swal({
-                  icon: "error",
-                  title:
-                    "ukuran file melebihi 100kb atau type file tidak didukung mohon masukkan type gambar .jpg atau .png",
-                  buttons: false,
-                  timer: 5000,
-                });
-              } else {
-                swal({
-                  icon: "success",
-                  title: "Sucess to Add Data!",
-                  buttons: false,
-                  timer: 5000,
-                });
-                window.location.reload();
-              }
-            })
-            .catch((err) => {
-              swal({
-                icon: "error",
-                title: "Update Failed",
-                buttons: false,
-                timer: 3000,
-              });
+      body.append("photo", imageProduct);
+      axios
+        .put(
+          `${process.env.REACT_APP_BACKEND_URL}/product/update/photo/${idNew}`,
+          body
+        )
+        .then((response) => {
+           if (response.data.message === "upload product photo failed bor") {
+            swal({
+              icon: "error",
+              title:
+                "ukuran file melebihi 100kb atau type file tidak didukung mohon masukkan type gambar .jpg atau .png",
+              buttons: false,
+              timer: 5000,
             });
+          } else {
+            swal({
+              icon: "success",
+              title: "Sucess to Add Data!",
+              buttons: false,
+              timer: 5000,
+            });
+            window.location.reload();
+          }
+        })
+        .catch((err) => {
+          swal({
+            icon: 'error',
+            title: "Update Failed",
+            buttons: false,
+            timer: 3000,
+          });
+    
+        });
         }
       })
       .catch((err) => {
         swal({
-          icon: "error",
+          icon: 'error',
           title: "Update Failed",
           buttons: false,
           timer: 3000,
         });
       });
     // if (imageProduct !== undefined) {
-
+      
+        
     // }
+
   };
 
   return (
     <>
+      {/* {JSON.stringify(dataSearch)} */}
       <div className="container-fluid">
         <Nav />
         <div className="container">
           <div className={Style.bg}>
             <h4>List Product</h4>
-            <div className="row justify-content-center">
-              <div className={`col-md-3  ${Style.cad}`}>
-                <div
-                  className={`d-flex  justify-content-center ${Style.cards} `}
-                >
-                  <div className={` ${Style.buttons}`}>
-                    <button className={Style.awesome}>
-                      <div>
-                        <FontAwesomeIcon
-                          icon={faCirclePlus}
-                          className={Style.iconPlus}
-                          data-bs-toggle="modal"
-                          data-bs-target="#exampleModal"
-                        />
-                      </div>
-                    </button>
-                    <div>
-                      <button
-                        type="button"
-                        className="btn btn-primary ms-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal"
-                      >
-                        <span>AddProduct</span>
-                      </button>
-                    </div>
-                    <div
-                      className="modal fade modal-xl"
-                      id="exampleModal"
-                      tabIndex="-1"
-                      aria-labelledby="exampleModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div className="modal-dialog">
-                        <div className="modal-content">
-                          <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">
-                              Add
-                            </h5>
-                            <button
-                              type="button"
-                              className="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <div className="modal-body">
-                            <Modal />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {data.map((item) => (
-                <div key={item.id_product} className={`col-md-3 ${Style.cad}`}>
+            <div className="row d-flex justify-content-center">
+              {dataSearch &&
+                dataSearch.map((item, e) => (
+                  <div key={e} className={`col-md-3 ${Style.cad}`}>
                   <div className={` ${Style.cards} `}>
                     <img
                       src={item.photo_url}
@@ -270,40 +203,40 @@ const Index = () => {
                     />
                     <div className={`card-body  ${Style.texts}`}>
                       <div className="text-center">
-                        <h5 className="card-title">{item.product_name}</h5>
+                      <h5 className="card-title">{item.product_name}</h5>
                       </div>
                       <div className="card-text py-2">
                         <div className="row justify-content-center">
                           <div className="col-md-6">
-                            <span>harga Beli</span>
+                          <span>harga Beli</span>
                           </div>
                           <div className="col-md-1">
-                            <span>:</span>
+                          <span>:</span>
                           </div>
                           <div className="col-md-4">
-                            <span>{item.priceb}</span>
+                          <span>{item.priceb}</span>
                           </div>
                         </div>
                         <div className="row justify-content-center">
                           <div className="col-md-6">
-                            <span>harga Jual</span>
+                          <span>harga Jual</span>
                           </div>
                           <div className="col-md-1">
-                            <span>:</span>
+                          <span>:</span>
                           </div>
                           <div className="col-md-4">
-                            <span>{item.pricej}</span>
+                          <span>{item.pricej}</span>
                           </div>
                         </div>
                         <div className="row justify-content-center">
                           <div className="col-md-6">
-                            <span>Stock</span>
+                          <span>Stock</span>
                           </div>
                           <div className="col-md-1">
-                            <span>:</span>
+                          <span>:</span>
                           </div>
                           <div className="col-md-4">
-                            <span>{item.stock}</span>
+                          <span>{item.stock}</span>
                           </div>
                         </div>
                       </div>
@@ -381,8 +314,7 @@ const Index = () => {
                                         </div>
                                         <div className="d-flex justify-content-center">
                                           File Sebelumnya :{" "}
-                                          {dataSearch &&
-                                            dataSearch.photo_pub_id}
+                                          {dataSearchDetail && dataSearchDetail.photo_pub_id}
                                         </div>
                                       </div>
                                       <div className="d-flex justify-content-center">
@@ -393,8 +325,7 @@ const Index = () => {
                                               className={`form-control ${Style.costuminput}`}
                                               id="floatingInputGroup1"
                                               defaultValue={
-                                                dataSearch &&
-                                                dataSearch.product_name
+                                                dataSearchDetail && dataSearchDetail.product_name
                                               }
                                               onChange={(e) =>
                                                 setUpdate({
@@ -414,7 +345,7 @@ const Index = () => {
                                               id="floatingInputGroup1"
                                               placeholder="Title"
                                               defaultValue={
-                                                dataSearch && dataSearch.pricej
+                                                dataSearchDetail && dataSearchDetail.pricej
                                               }
                                               onChange={(e) =>
                                                 setUpdate({
@@ -435,7 +366,7 @@ const Index = () => {
                                               id="floatingInputGroup1"
                                               placeholder="Title"
                                               defaultValue={
-                                                dataSearch && dataSearch.priceb
+                                                dataSearchDetail && dataSearchDetail.priceb
                                               }
                                               onChange={(e) =>
                                                 setUpdate({
@@ -455,7 +386,7 @@ const Index = () => {
                                               id="floatingInputGroup1"
                                               placeholder="Title"
                                               defaultValue={
-                                                dataSearch && dataSearch.stock
+                                                dataSearchDetail && dataSearchDetail.stock
                                               }
                                               onChange={(e) =>
                                                 setUpdate({
@@ -552,27 +483,7 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-            <div
-              className={`d-flex justify-content-center ${Style.pagination}`}
-            >
-              <button
-                disabled={page === 1}
-                className="  my-5 col-md-2  "
-                onClick={() => PreviousPage()}
-              >
-                {" "}
-                Preveous{" "}
-              </button>
-              <button className="  my-5 col-md-2 ">{page}</button>
-              <button
-                className=" my-5 col-md-2  "
-                disabled={data <= 1}
-                onClick={() => NextPage()}
-              >
-                Next
-              </button>
+                ))}
             </div>
           </div>
         </div>

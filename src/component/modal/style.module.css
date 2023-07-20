@@ -26,9 +26,6 @@
 .newModal{
     width: 300%;
 }
-.searching{
-    padding-right: 20%;
-}
 @media screen and (max-width: 1160px) {
 
     .profile{
@@ -42,15 +39,10 @@
     .modals{
         margin-left: 0%;
     }
-    /* .searching{
-        padding-left: 45%;
-    } */
+    
 }
 @media screen and (max-width: 990px) {
     .scards{
         margin-right: 1000px !important;
-    }
-    .searching{
-        padding-right: 30%;
     }
 }

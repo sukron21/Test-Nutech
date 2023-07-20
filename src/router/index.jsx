@@ -2,9 +2,10 @@ import React from "react";
 import { BrowserRouter,Routes, Route, Navigate, Outlet  } from "react-router-dom";
 import Auth from "../views/Auth";
 import Home from "../views/Home"
-import Profile from "../views/Profile"
 import Update from "../views/Update"
 import Hal2 from "../views/hal2"
+import Searching from "../views/searching"
+import { useSelector } from "react-redux";
 
 const Index = () =>{
     const PrivateRoute = () => {
@@ -24,14 +25,14 @@ const Index = () =>{
                 <Route path="home" element={<PrivateRoute/>} >
 			    <Route index element={<Home />} />
                 </Route>
-                <Route path="/Profile" element={<PrivateRoute />}>
-                <Route index element={<Profile />} />
-                </Route>
                 <Route path="/Update/:id" element={<PrivateRoute />}>
                 <Route index element={<Update />} />
                 </Route>
                 <Route path="/hal2" element={<PrivateRoute />}>
                 <Route index element={<Hal2/>} />
+                </Route>
+                <Route path="/searching" element={<PrivateRoute />}>
+                <Route index element={<Searching/>} />
                 </Route>
             </Route>
         </Routes>

@@ -1,15 +1,15 @@
 .bg{
     background-color: white;
-    padding-top: 30px;
-    padding-bottom: 50px;
+    padding-top: 10px;
+    /* padding-bottom: 50px; */
 }
 .cards{
 width:200px;
 height:350px;
 background:#F0F1F9;
 border: 3px black;
-margin-top: 30px;
-margin-right: 100px;
+/* margin-top: 10px; */
+/* margin-right: 100px; */
 }
 .listImg{
     object-fit:cover;

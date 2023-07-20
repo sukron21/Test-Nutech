@@ -1,4 +1,4 @@
-import React, { useRef, useState,useEffect  } from "react";
+import React, {useState,useEffect  } from "react";
 import Footer from "../../component/footer";
 import Style from "./style.module.css";
 import Nav from "../../component/nav";
@@ -10,23 +10,10 @@ const Index = () => {
   
   const navigate = useNavigate();
   const [product, setProduct] = useState([]);
-  // const [imageProduct, setImageProduct] = useState();
   const [page, setPage] = useState(1);
-  const [dataID,setDataID]= useState([])
-  let total = "";
-  // const handleClick = (event) => {
-  //   hiddenFileInput.current.click();
-  // };
-  // const handleChange = (event) => {
-  //   const fileUploaded = event.target.files[0];
-  //   document.getElementById("customBtn").innerHTML = fileUploaded.name;
-  //   // setImage(fileUploaded);
-  // };
   const [data, setData] = useState([]);
   useEffect(() => {
     getData( page)
-    const datauser = JSON.parse(localStorage.getItem("name"));
-    const id_user = datauser.data.id_seller;
   }, [ page])
  const getData=() => {
     axios
@@ -64,7 +51,7 @@ const Index = () => {
           swal({
             icon: 'success',
             title: 'Delete Success!',
-            showConfirmButton: false,
+            buttons: false,
             timer: 5000,
           });
           return navigate("/home");
@@ -75,7 +62,7 @@ const Index = () => {
           swal({
             icon: 'error',
             title: "Delete Failed",
-            showConfirmButton: false,
+            buttons: false,
             timer: 5000,
           });
         })
@@ -105,18 +92,18 @@ const Index = () => {
           <div className={Style.bg}>
             <h4>List Product</h4>
             <div className="row d-flex justify-content-center">
-              {data.map((item, index)=>(
-                <div key={index} className="col-md-3  ">
+              {data.map((item, e)=>(
+                <div key={e} className="col-md-3  ">
                 <div className={` ${Style.cards} `}>
                   <img src={item.photo_url} className={Style.listImg} alt="..." />
                   <div className={`card-body ${Style.texts}`}>
                     <h5 className="card-title ">{item.product_name}</h5>
-                    <p className="card-text py-2">
-                      <p>harga Jual: {item.pricej}</p>
-                      <p>harga Beli: {item.priceb}</p>
-                      <p>Stock     : {item.stock}</p>
+                    <span className="card-text py-2">
+                      <span>harga Jual: {item.pricej}</span>
+                      <span>harga Beli: {item.priceb}</span>
+                      <span>Stock     : {item.stock}</span>
                       
-                    </p>
+                    </span>
                     <div
                       className={`d-flex justify-content-center ${Style.profile}`}
                     >

@@ -14,21 +14,23 @@ const Index = () => {
   const [dataUpdate, setDataUpdate] = useState();
   const [imageProduct, setImageProduct] = useState();
   const { id } = useParams();
+  const [fileName, setFileName] = useState("");
   const handleClick = (event) => {
     hiddenFileInput.current.click();
   };
   const handleChange = (event) => {
     const fileUploaded = event.target.files[0];
     document.getElementById("customBtn").innerHTML = fileUploaded.name;
+    setFileName(fileUploaded.name);
     setImageProduct(fileUploaded);
   };
 
-  // console.log("data",dataSearch[0].stock)
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/productlist/${id}`)
       .then((response) => {
-        // console.log("didigidaw",response.data.data.rows[0]);
+        console.log(response.data.data.rows)
         setDataSearch(response.data.data.rows);
         setDataUpdate(response.data.data.rows[0]);
       })
@@ -45,8 +47,6 @@ const Index = () => {
   });
   const handlePost = (e) => {
     e.preventDefault();
-    // alert(imageProduct)
-    // console.log(imageProduct.name)
     const form = {
       product_name: update.product_name,
       pricej: update.pricej,
@@ -57,29 +57,22 @@ const Index = () => {
     axios
       .put(`${process.env.REACT_APP_BACKEND_URL}/product/update/${id}`, form)
       .then((res) => {
-        // console.log(res);
-        // console.log(imageProduct.name)
-        // alert("Update Success");
         swal({
           icon: 'success',
           title: 'Sucess to Update Data!',
-          showConfirmButton: false,
+          buttons: false,
           timer: 5000,
         });
         return navigate("/home");
       })
       .catch((err) => {
-        // console.log(err);
         swal({
           icon: 'error',
           title: "Update Failed",
-          showConfirmButton: false,
+          buttons: false,
           timer: 3000,
         });
-  
-        // alert("Update Failed");
       });
-    // console.log(imageProduct.name);
     if (imageProduct !== undefined) {
       let body = new FormData();
       body.append("photo", imageProduct);
@@ -89,25 +82,20 @@ const Index = () => {
           body
         )
         .then((res) => {
-          // console.log(res);
-          // console.log(imageProduct.name)
-          // alert("Update Success");
           swal({
             icon: 'success',
             title: 'Sucess to Update Image!',
-            showConfirmButton: false,
+            buttons: false,
             timer: 5000,
           });
            navigate("/home");
            window.location.reload();
         })
         .catch((err) => {
-          // console.log(err);
-          // alert("Update Failed");
           swal({
             icon: 'error',
             title: "Update Failed",
-            showConfirmButton: false,
+            buttons: false,
             timer: 3000,
           });
     
@@ -121,9 +109,8 @@ const Index = () => {
       {/* {JSON.stringify(dataSearch)} */}
       <div className="container ">
         {dataSearch &&
-          dataSearch.map((item, index) => (
-            <>
-              <div key={index}>
+          dataSearch.map((item,e) => (
+              <div key={e}>
                 <form className=" mx-5">
                   <div
                     className={`col-md-7 mb-4 my-4  
@@ -133,23 +120,18 @@ const Index = () => {
                       <img src={addPhoto} alt="" />
                     </div>
                     <div className="d-flex justify-content-center">
-                      <h5
-                        // className="text-muted"
-                        id="customBtn"
-                        onClick={handleClick}
-                      >
-                        {/* {item.photo_pub_id} */}
-                      </h5>
-                      <input
-                        className=""
-                        type="file"
-                        ref={hiddenFileInput}
-                        id="formFile"
-                        onChange={handleChange}
-                        // defaultValue={item.photo_url}
-                        // style={{ display: "none" }}
-                      />
-                    </div>
+        <h5 className="text-muted" id="customBtn" onClick={handleClick}>
+          {fileName || "Pilih berkas"} {/* Tampilkan nama berkas atau teks "Pilih berkas" jika belum ada berkas yang dipilih */}
+        </h5>
+        <input
+          className=""
+          type="file"
+          ref={hiddenFileInput}
+          id="formFile"
+          onChange={handleChange}
+          style={{ display: "none" }}
+        />
+      </div>
                     <div className="d-flex justify-content-center">
                       File Sebelumnya : {item.photo_pub_id}
                     </div>
@@ -225,7 +207,7 @@ const Index = () => {
                   </div>
                 </form>
               </div>
-            </>
+           
           ))}
       </div>
 
