@@ -89,7 +89,9 @@ const Index = () => {
             timer: 5000,
           });
            navigate("/home");
-           window.location.reload();
+           setTimeout(() => {
+            window.location.reload();
+          }, 3000);
         })
         .catch((err) => {
           swal({

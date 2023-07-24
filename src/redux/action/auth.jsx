@@ -5,7 +5,7 @@ export const login = (body, handleSuccess) => ({
     payload: new Promise((resolve, reject) => {
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, body)
         .then((res) => {
-            console.log(res)
+            // console.log(res)
             handleSuccess(res);
             resolve(res);
         })

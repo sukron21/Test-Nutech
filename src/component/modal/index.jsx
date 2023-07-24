@@ -1,11 +1,13 @@
 import React, { useRef, useState } from "react";
 import Style from "../modal/style.module.css";
-import axios from "axios";
 import swal from "sweetalert";
 import addPhoto from "../../assets/addphoto.PNG";
+import { useDispatch } from "react-redux";
+import {insert} from "../../redux/action/product"
 
 const Index = () => {
   const hiddenFileInput = useRef(null);
+  const dispatch = useDispatch()
   const [imageProduct, setImageProduct] = useState();
   const [product, setProduct] = useState({
     seller: "",
@@ -17,11 +19,11 @@ const Index = () => {
   });
   const onSubmit = (e) => {
     e.preventDefault();
-    if(product.pricej<1 ||product.priceb<1 || product.stock<1){
+    if(product.pricej<1 ||product.priceb<1 || product.stock<1 || imageProduct===null){
         swal({
             icon: "error",
             title:
-              "Harga beli, Harga Jual atau stock tidak boleh dibawah 1",
+              "Harga beli, Harga Jual atau stock tidak boleh dibawah 1 atau data belum lengkap",
             buttons: false,
             timer: 5000,
         })
@@ -36,9 +38,10 @@ const Index = () => {
     body.append("photo", imageProduct);
     body.append("description", "aa");
     body.append("priceb", product.priceb);
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/insert`, body)
-      .then((response) => {
+    // axios
+      // .post(`${process.env.REACT_APP_BACKEND_URL}/insert`, body)
+      // .then((response) => {
+        const handleSuccess = (response)=>{
         if (response.data.status === "failed") {
           swal({
             icon: "error",
@@ -59,21 +62,24 @@ const Index = () => {
             icon: "success",
             title: "Sucess to Add Data!",
             buttons: false,
-            timer: 5000,
+            timer: 3000,
           });
-          
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
         }
-        window.location.reload();
-      })
-      .catch((err) => {
-        // alert(err)
-        swal({
-          icon: "error",
-          title: err,
-          buttons: false,
-          timer: 3000,
-        });
-      });
+        
+      }
+      // .catch((err) => {
+      //   // alert(err)
+      //   swal({
+      //     icon: "error",
+      //     title: err,
+      //     buttons: false,
+      //     timer: 3000,
+      //   });
+      // });
+      dispatch(insert(body,handleSuccess))
     }
   };
   const handleClick = (event) => {

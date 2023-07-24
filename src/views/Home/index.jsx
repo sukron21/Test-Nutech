@@ -8,10 +8,12 @@ import swal from "sweetalert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../../component/modal";
+import { deleted,updateProduct,updateImageProduct, getDataProduct,getDataProductbyID } from "../../redux/action/product";
+import { useDispatch } from "react-redux";
 
 
 const Index = () => {
-  const [product, setProduct] = useState([]);
+  const dispatch = useDispatch()
   const [idNih, setID] = useState("");
   const [idNew, setIDNew] = useState("");
   const [page, setPage] = useState(1);
@@ -37,26 +39,15 @@ const Index = () => {
     getData(page);
   }, [page]);
   const getData = () => {
-    axios
-      .get(
-        `${
-          process.env.REACT_APP_BACKEND_URL
-        }/productlist/limit?sort=product_name&asc=asc&limit=3${
-          page ? `&page=${page}` : ""
-        }`
-      )
-      .then((response) => {
-        // console.log(response.data.data);
+    const pages= page
+        const handleSuccessData = (response)=>{
         setData(response.data.data.rows);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      }
+      dispatch(getDataProduct(pages,handleSuccessData))
   };
   const NextPage = () => {
     setPage(page + 1);
     getData(5, page);
-    // window.location.reload();
   };
   const PreviousPage = () => {
     if (page > 1) {
@@ -66,27 +57,8 @@ const Index = () => {
   };
 
   const deleteProduct = () => {
-    axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/product/delete/${idNih}`)
-      .then((response) => {
-        const posts = product.filter((item) => item.id === idNih);
-        setProduct({ data: posts });
-        swal({
-          icon: "success",
-          title: "Delete Success!",
-          buttons: false,
-          timer: 5000,
-        });
-        window.location.reload();
-      })
-      .catch((err) => {
-        swal({
-          icon: "error",
-          title: "Delete Failed",
-          buttons: false,
-          timer: 5000,
-        });
-      });
+    const idDelete = idNih
+      dispatch(deleted(idDelete))
   };
   const handleClick = (event) => {
     hiddenFileInput.current.click();
@@ -107,22 +79,18 @@ const Index = () => {
     }
   }, [idNew]);
   const getDataDetail = () => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/productlist/${idNew}`)
-      .then((response) => {
-        // console.log("anjink");
-        // console.log(response.data.data.rows[0]);
+    const id=idNew
+    
+      const handleSuccessDataID=(response)=>{
         setDataSearch(response.data.data.rows[0]);
         setDataUpdate(response.data.data.rows[0]);
-        // console.log(dataSearch)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      }
+      dispatch(getDataProductbyID(id,handleSuccessDataID))
   };
 
   const handlePost = (e) => {
     e.preventDefault();
+    const id = idNew
     const form = {
       product_name: update.product_name,
       pricej: update.pricej,
@@ -130,9 +98,7 @@ const Index = () => {
       description: update.description,
       priceb: update.priceb,
     };
-    axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/product/update/${idNew}`, form)
-      .then((res) => {
+        const handleSuccess = (res)=>{
         if (res.data.status === "failed") {
           swal({
             icon: "error",
@@ -147,16 +113,13 @@ const Index = () => {
             buttons: false,
             timer: 5000,
           });
-          window.location.reload();
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
         } else {
           let body = new FormData();
           body.append("photo", imageProduct);
-          axios
-            .put(
-              `${process.env.REACT_APP_BACKEND_URL}/product/update/photo/${idNew}`,
-              body
-            )
-            .then((response) => {
+            const handleSuccessImage = (response) =>{
               if (response.data.message === "upload product photo failed bor") {
                 swal({
                   icon: "error",
@@ -172,30 +135,16 @@ const Index = () => {
                   buttons: false,
                   timer: 5000,
                 });
-                window.location.reload();
+                setTimeout(() => {
+                  window.location.reload();
+                }, 3000);
               }
-            })
-            .catch((err) => {
-              swal({
-                icon: "error",
-                title: "Update Failed",
-                buttons: false,
-                timer: 3000,
-              });
-            });
+            }
+            dispatch(updateImageProduct(body,id,handleSuccessImage))
         }
-      })
-      .catch((err) => {
-        swal({
-          icon: "error",
-          title: "Update Failed",
-          buttons: false,
-          timer: 3000,
-        });
-      });
-    // if (imageProduct !== undefined) {
-
-    // }
+        
+      }
+    dispatch(updateProduct(form,id,handleSuccess))
   };
 
   return (

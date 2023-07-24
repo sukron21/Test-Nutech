@@ -43,7 +43,9 @@ const Index = () => {
             });
           } else {
             navigate(`/Searching?search=${Search}`);
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
           }
         })
         .catch((err) => {
